@@ -61,18 +61,23 @@ export class Tile extends HTMLElement{
 
         // Testing 
         this.addEventListener('click', e => {
-            /* let all = [...document.getElementsByTagName('game-tile')].forEach( t=> t.style = '')
+            /* 
+            // Turn meioghbor background red
+            let all = [...document.getElementsByTagName('game-tile')].forEach( t=> t.style = '')
             this.neighbors.forEach( n=> n.style.backgroundColor='red' )  */
-            this.char = this.char == ' ' ? 'w' : ' '
-            
+
+            /* // Toggle wall
+            this.char = this.char == ' ' ? 'w' : ' '            
             this.findNeighbors()
-            this.neighbors.forEach( n => n.findNeighbors() )
+            this.neighbors.forEach( n => n.findNeighbors() ) */
             
         })
     }
 
     // Look around me for neighbors.
     // As we look from north to west (CW) build the image string (ie 'n_e_w')
+    // Every combination will have an image in the tileset, 
+    // so we only care about cardinal directions as far as the background image goes ( can expand to do angles )
     findNeighbors(){
         const data = this.manager.tile_data// [row][col] !!
         const X = this.pos.x; const Y = this.pos.y
@@ -94,7 +99,8 @@ export class Tile extends HTMLElement{
         // Build image string (walls)
         if ( this.char != ' '){            
             let directions = []
-            for ( let key of ['n','e','s','w']){
+
+            for ( let key of ['n','e','s','w']){// Cardinal directions
 
                 // Handle edges
                 if ( key=='n' && Y==0 ){ directions.push('n'); }
@@ -105,14 +111,17 @@ export class Tile extends HTMLElement{
                 // Add direction if there is a neighbor                
                 if (neighbors.hasOwnProperty(key)){
                     if ( neighbors[key].char != ' '){ directions.push(key) }
-                }
-                
-                if (directions.length==0){
-                    this.style.backgroundImage = `url(${this.tileset}single.svg)`
-                }else{
-                    this.style.backgroundImage = `url(${this.tileset}${directions.join('_')}.svg)`
-                }                
+                }              
             }
+
+            // Set as single if no neighbors
+            if (directions.length==0){
+                this.style.backgroundImage = `url(${this.tileset}single.svg)`
+            // Join array to get the file name
+            }else{
+                this.style.backgroundImage = `url(${this.tileset}${directions.join('_')}.svg)`
+            } 
+            
         }else{
             // We are an air block
             this.style.backgroundImage = 'none';
