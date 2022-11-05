@@ -18,6 +18,6 @@ export class Level{
     }
 
     buildLevel( obj ){
-        this.Tile_Man.buildTiles( obj.tileset, obj.tiles )
+        this.Tile_Man.buildTiles( obj.wall_tileset, obj.enemy_tileset, obj.tiles )
     }
 }
